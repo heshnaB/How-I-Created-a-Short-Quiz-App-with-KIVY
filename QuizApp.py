@@ -33,7 +33,7 @@ class QuizApp(App):
         # self.window.cols = 1
         # self.window.add_widget(Image(source("logo.png")))
         
-    #return self.window
+    return self.window
 
 if __name__ == "__main__":
     QuizApp().run()
