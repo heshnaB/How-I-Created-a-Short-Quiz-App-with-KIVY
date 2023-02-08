@@ -30,8 +30,8 @@ class QuizApp(App):
     
     def build(self):
         self.window = GridLayout()
-        self.window.cols = 1
-        self.window.add_widget(Image(source("logo.png")))
+        # self.window.cols = 1
+        # self.window.add_widget(Image(source("logo.png")))
         
     #return self.window
 
