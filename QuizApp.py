@@ -29,9 +29,11 @@ drive_thru = places[0:6]; deliver = places[6:-1]
 class QuizApp(App):
     
     def build(self):
-        self.window - GridLayout()
+        self.window = GridLayout()
+        self.window.cols = 1
+        self.window.add_widget(Image(source("logo.png")))
         
-    return self.window
+    #return self.window
 
 if __name__ == "__main__":
     QuizApp().run()
