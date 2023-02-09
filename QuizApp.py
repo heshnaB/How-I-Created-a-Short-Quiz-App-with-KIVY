@@ -29,7 +29,6 @@ q = open("Questions.txt"); qs = [];  [qs.append(i.strip()) for i in q]
 drive_thru = places[0:6]; deliver = places[6:-1]
 
 
-
 class QuizApp(App):
     
     def build(self):
@@ -54,14 +53,14 @@ class QuizApp(App):
             bold = True,
             font_size = 30
         )
-        
-        self.button.bind(on_press = self.beginQ)
         self.window.add_widget(self.button)
+        self.button.bind(on_press = self.beginQ)
+        
         
         return self.window
     
     def beginQ(self, event):
-        text = "Do you feel like driving?"
+        
         self.window.remove_widget(self.ready4Quiz)
         self.window.remove_widget(self.button)
         
@@ -74,15 +73,75 @@ class QuizApp(App):
         
         self.window.add_widget(self.quest)
         
+        
+        
         self.buttonY = Button(
-            text = "Yes",
+            text = "Sure",
             size_hint = (0.5, 0.5),
             bold = True,
             font_size = 30
         )
         
-        self.buttonY.bind(on_press = self.beginQ)
+        
+        self.buttonN = Button(
+            text = "Absolutely Not!",
+            size_hint = (0.5, 0.5),
+            bold = True,
+            font_size = 30
+        )
+        
+        
+        self.buttonY.bind(on_press = self.yesoption)
+        self.buttonN.bind(on_press = self.nooption)
         self.window.add_widget(self.buttonY)
+        self.window.add_widget(self.buttonN)
+        
+        
+        
+    
+        
+        
+        
+    def yesoption(self, event):
+        
+        import random
+        
+        ans = str(random.choice(drive_thru))
+        
+        self.window.remove_widget(self.quest)
+        self.window.remove_widget(self.buttonN)
+        self.window.remove_widget(self.buttonY)
+        
+        self.ans = Label(
+            text = f"Go for {ans}!",
+            font_size = 45,
+            color = "#FFFFFF",
+            bold = True
+        )
+        
+        self.window.add_widget(self.ans)
+        
+        
+        
+        
+    
+    def nooption(self, event):
+        import random
+        
+        ans = str(random.choice(deliver))
+        
+        self.window.remove_widget(self.quest)
+        self.window.remove_widget(self.buttonN)
+        self.window.remove_widget(self.buttonY)
+        
+        self.ans = Label(
+            text = f"Get {ans}!",
+            font_size = 45,
+            color = "#FFFFFF",
+            bold = True
+        )
+        
+        self.window.add_widget(self.ans)
 
 if __name__ == "__main__":
     QuizApp().run()
