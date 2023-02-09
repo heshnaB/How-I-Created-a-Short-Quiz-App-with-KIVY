@@ -8,6 +8,7 @@ Ref:
 -If you need help with installing Android IOS Emulator: https://www.geeksforgeeks.org/how-to-set-up-an-emulator-for-vscode/
 - https://kivy.org/doc/stable/guide/widgets.html
 - https://www.section.io/engineering-education/kivy-python-first-app/
+- Color picker: https://htmlcolorcodes.com/
 '''
 
 # Please install the library if you dont have it by entering this in the command prompt: pip install kivy
@@ -20,6 +21,7 @@ from kivy.uix.image import Image
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from datetime import datetime, date, time, timedelta
+
 
 # Now we will open the file with the list of places and convert it into a list.
 p = open("Places.txt"); places = []; [places.append(i.strip()) for i in p]
@@ -39,50 +41,49 @@ class QuizApp(App):
         self.window.add_widget(Image(source="logo.png"))
         
         self.ageRequest = Label(
-            text = "Enter your year of birth...",
-            font_size = 50,
-            color = "#ffffff",
+            text = "Are you ready to decide what to eat?",
+            font_size = 45,
+            color = "#FFFFFF",
             bold = True
         )
         
         self.window.add_widget(self.ageRequest)
         
-        self.date = TextInput(
-            multiline = False,
-            padding_y = (30,30),
-            size_hint = (1,0.7),
-            font_size = 30
-        )
+        # self.date = TextInput(
+        #     multiline = False,
+        #     padding_y = (30,30),
+        #     size_hint = (1,0.7),
+        #     font_size = 30
+        # )
         
-        self.window.add_widget(self.date)
+        # self.window.add_widget(self.date)
         
         self.button = Button(
-            text = "Calculate Age",
+            text = "YES, I'M STARVING!!",
             size_hint = (0.5, 0.5),
             bold = True,
             font_size = 30
         )
         
-        self.button.bind(on_press = self.getAge)
+        self.button.bind(on_press = self.q_1)
         self.window.add_widget(self.button)
         
         return self.window
     
-    def getAge(self, event):
+    def q_1(self, event):
         today = datetime.today().year
         dob = self.date.text
         age = int(today) - int(dob)
         self.ageRequest.text = "You are " + str(int(age)) + " years old"
+        
+    # def getAge(self, event):
+    #     today = datetime.today().year
+    #     dob = self.date.text
+    #     age = int(today) - int(dob)
+    #     self.ageRequest.text = "You are " + str(int(age)) + " years old"
 
 if __name__ == "__main__":
     QuizApp().run()
-    
-
-    
-#     def build(self):
-#         return Label(text="Are you too lazy to cook but you want to eat?")
-
-# QuizApp().run()
 
 
 
