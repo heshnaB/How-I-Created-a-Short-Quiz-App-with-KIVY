@@ -3,13 +3,14 @@
 '''
 Author: Heshna Bhagawan
 Project: Building a quiz app that helps you decide what to eat.
-Ref: 
+
+References:
 Doc for Kivy: https://kivy.org/doc/stable/guide/widgets.html
 App Sample in Kivy: https://www.section.io/engineering-education/kivy-python-first-app/
 - Color picker: https://htmlcolorcodes.com/
 '''
 
-# Please install the library if you dont have it by entering this in the command prompt: pip install kivy
+# Please install the library, if you don't have it, by entering this in the command prompt: pip install kivy
 
 # Now we have to import the libraries for the app
 from kivy.app import App
@@ -23,11 +24,13 @@ from kivy.uix.floatlayout import FloatLayout
 
 
 # Now we will open the file with the list of places and convert it into a list.
-p = open("Places.txt"); places = []; [places.append(i.strip()) for i in p]
-q = open("Questions.txt"); qs = [];  [qs.append(i.strip()) for i in q]
+# p = open("Places.txt"); places = []; [places.append(i.strip()) for i in p]
+# q = open("Questions.txt"); qs = [];  [qs.append(i.strip()) for i in q]
 
-# Split the list into the categories drive thru and deliver.
-drive_thru = places[0:6]; deliver = places[6:-1]
+# # Split the list into the categories drive thru and deliver.
+# drive_thru = places[0:6]; deliver = places[6:-1]
+
+
 
 class Home(FloatLayout):
 
@@ -121,9 +124,11 @@ class QuizApp(App):
         
         
     def add_buttons(self, root):
-        import random
-        # y = ["Sure",0.9,0.1, 0.5, 0.21, random.choice(drive_thru)]
-        # n = ["Absolutely not!", 0.9, 0.1, 0.5, 0.1, random.choice(deliver)]
+        
+        #deliver = ['Mikado', 'Edo Japan', 'Pizza Hut', 'Dominos', \
+            #'Swan Pizza' , 'Papa Johns Pizza', 'Pizza 73', 'Grain of Rice',\
+                #'Rice Bowl Deluxe']
+        
         
         self.y = Button(
             text = "Sure",
@@ -144,11 +149,35 @@ class QuizApp(App):
         
         self.root.add_widget(self.y)
         self.root.add_widget(self.buttonN)
-        # self.y.bind(on_press= )
-        # self.buttonN.bind(on_press = print(random.choice(deliver)))
-        
-        
+        self.y.bind(on_press= self.option_y)
+        self.buttonN.bind(on_press = self.option_n)
     
+    
+        
+    def option_n(self, root):
+        import random
+        # y = ["Sure",0.9,0.1, 0.5, 0.21, random.choice(drive_thru)]
+        # n = ["Absolutely not!", 0.9, 0.1, 0.5, 0.1, random.choice(deliver)]
+        
+        deliver = ['Mikado', 'Edo Japan', 'Pizza Hut', 'Dominos', \
+            'Swan Pizza' , 'Papa Johns Pizza', 'Pizza 73', 'Grain of Rice',\
+                'Rice Bowl Deluxe']
+        
+        
+        self.root.clear_widgets()
+        self.add_label(root,f"Get {random.choice(deliver)}!")
+            
+    def option_y(self, root):
+        import random
+        # y = ["Sure",0.9,0.1, 0.5, 0.21, random.choice(drive_thru)]
+        # n = ["Absolutely not!", 0.9, 0.1, 0.5, 0.1, random.choice(deliver)]
+        
+        drive_thru = ['McDonald\'s', 'Popeyes', 'Burger King', 'Dairy Queen','A&W', 'KFC']
+        
+        
+        self.root.clear_widgets()
+        self.add_label(root,f"Go for {random.choice(drive_thru)}!")
+            
         
         # self.remove_widget(self.y)
         # self.remove_widget(self.buttonN)
