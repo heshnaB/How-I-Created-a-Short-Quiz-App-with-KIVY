@@ -2,45 +2,63 @@
 
 '''
 Author: Heshna Bhagawan
-Project: Building a quiz app that helps you decide what to eat.
+Project: Building a quiz app that helps you decide what to eat. The code is designed to go in an infinite loop and won't close until the user closes the window.
 
 References:
 Doc for Kivy: https://kivy.org/doc/stable/guide/widgets.html
-App Sample in Kivy: https://www.section.io/engineering-education/kivy-python-first-app/
+Other references:
+- https://www.section.io/engineering-education/kivy-python-first-app/
+- https://www.simplikivyapp.com/ - better for a longer quiz
+
 - Color picker: https://htmlcolorcodes.com/
 '''
 
-# Please install the library, if you don't have it, by entering this in the command prompt: pip install kivy
+# Step 1: Please install the library, if you don't have it, by entering this in the command prompt: pip install kivy
 
-# Now we have to import the libraries for the app
+# Step 2: Import the following libraries
 from kivy.app import App
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.image import Image
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.graphics import Color, Rectangle
 from kivy.uix.floatlayout import FloatLayout
+import random
 
-
-# Now we will open the file with the list of places and convert it into a list.
-# p = open("Places.txt"); places = []; [places.append(i.strip()) for i in p]
-# q = open("Questions.txt"); qs = [];  [qs.append(i.strip()) for i in q]
-
-# # Split the list into the categories drive thru and deliver.
-# drive_thru = places[0:6]; deliver = places[6:-1]
-
-
-
+# Step 3: Create a home screen for the app.
 class Home(FloatLayout):
 
     def __init__(self, **kwargs):
-        # make sure we aren't overriding any important functionality
+        '''
+        Purpose: Initiates the class
+        '''
+        
+        # Sets up the app window
         super(Home, self).__init__(**kwargs)
         
-        #let's add a Widget to this layout
+        # Call the main_home function.        
+        self.main_home()
         
+        
+    def logo(self):
+        '''
+        Purpose: Creates and displays the logo
+        '''
+        
+        self.add_widget(Image(source="logo.png",
+            size_hint = (0.3, 0.7),
+            pos_hint={'center_x': 0.5, 'y': 0.355}))
     
+     
+    def main_home(self):
+        '''
+        Purpose: Creates the layout for the home screen
+        '''
+        
+        # Since the code is a loop, we can use the line "self.clear_widgets" to clear the entire page before we add the home screen widgets.
+        self.clear_widgets()
+        
+        # Creates the first question.
         self.label = Label(
                 text="Are you ready to decide what to eat?",
                 font_size = 45,
@@ -48,6 +66,8 @@ class Home(FloatLayout):
                 bold = True,
                 pos_hint={'x': 0.000000001, 'center_y': 0.4}
             )
+        
+        # Creates the button for the answer to the first question.
         self.button = Button(
             text = "Yes, I'm starving!",
             size_hint = (0.9, 0.185),
@@ -55,80 +75,102 @@ class Home(FloatLayout):
             font_size = 30,
             pos_hint={'center_x': 0.5, 'y': 0.1})
         
+        # Display the logo
+        self.logo()
+        
+        # Display the question and the button.
         self.add_widget(self.label)
         self.add_widget(self.button)
         
-        self.add_widget(
-            Image(source="logo.png",
-            size_hint = (0.3, 0.7),
-            pos_hint={'center_x': 0.5, 'y': 0.355}))
         
-        #self.button.bind(on_press= self.reset)
-        
-        
+            
 
     def reset(self):
-        self.remove_widget(self.button)
-        self.remove_widget(self.label)      
+        '''
+        Purpose: To remove all widgets except the logo.
+        '''
         
-
+        # Clears all the widgets and adds the logo.
+        self.clear_widgets()
+        self.logo()    
+        
+# Step 4: Creates the rest of the quiz layouts.
 class QuizApp(App):
     
     def build(self):
+        '''
+        Initiates and builds the quiz.
+        '''
         
-        
+        # Creates a variable for the Home() class.
         self.root = root = Home()
         
-        
-        
+        # Recognizes the size and position changes. See the purpose of the function "_update_rect()" below.
         root.bind(size=self._update_rect, pos=self._update_rect)
         
-
+        # Adds a background image/color/video to the layout of the quiz app. 
         with root.canvas.before:
-            Color(0, 0, 0, 0)  # green; colors range from 0-1 not 0-255
-            self.rect = Rectangle(size=root.size, pos=root.pos)
             
-        root.button.bind(on_press= self.beginQ)
+            # See color link in references for more colors.
+            Color(0, 0, 0, 0)  
+            self.rect = Rectangle(size=root.size, pos=root.pos)
+        
+        # Calls the start() function.
+        self.start(root)
+    
+    def _update_rect(self, instance, value):
+        '''
+        Purpose: To ensure that the rectangle is drawn inside the layout of the quiz app.
+        '''
+        self.rect.pos = instance.pos
+        self.rect.size = instance.size   
+        
+    def start(self, root):
+        '''
+        Purpose: Contains the first button's action and returns the app screen.
+        '''
+        
+        self.root.button.bind(on_press= self.beginQ)
         self.h = ''
         return root
-
-    def _update_rect(self, instance, value):
-        self.rect.pos = instance.pos
-        self.rect.size = instance.size
+        
+    
     
     
     def beginQ(self,root):
-        import random
+        '''
+        Purpose: Displays the next page after clicking the button on the home screen.
+        '''
+        
+        # Clears page except for the logo.
         self.root.reset()
+        
+        # Adds the label and the buttons.
         self.add_label(root,"Do you feel like driving?")
         self.add_buttons(root)
-        
-        #self.answer(self)
-        
-        # "Sure",0.9,0.1, 0.5, 0.21, random.choice(drive_thru))
-        # self.add_button(root, "Absolutely not!", 0.9, 0.1, 0.5, 0.1, random.choice(deliver))
         
         
         
         
     def add_label(self,root, string):
+        '''
+        Purpose: Create and add the label onto the app.
+        '''
         
-        self.new_l = Label(
+        self.root.add_widget(Label(
             text = string,
             font_size = 45,
             color = "#FFFFFF",
             bold = True,
             pos_hint={'x': 0.000000001, 'center_y': 0.4}
-        )
-        self.root.add_widget(self.new_l)
+        ))
+        
         
         
     def add_buttons(self, root):
-        
-        #deliver = ['Mikado', 'Edo Japan', 'Pizza Hut', 'Dominos', \
-            #'Swan Pizza' , 'Papa Johns Pizza', 'Pizza 73', 'Grain of Rice',\
-                #'Rice Bowl Deluxe']
-        
+        '''
+        Purpose: Create and add the yes and no buttons.
+        '''
         
         self.y = Button(
             text = "Sure",
@@ -149,144 +191,78 @@ class QuizApp(App):
         
         self.root.add_widget(self.y)
         self.root.add_widget(self.buttonN)
+        
+        # Binds the yes and no buttons so that they lead the user to their own result.
         self.y.bind(on_press= self.option_y)
         self.buttonN.bind(on_press = self.option_n)
     
     
+    def home_button(self, root):
+        '''
+        Display: Adds a button that takes the user back to the homepage.
+        '''
         
+        self.restart_but = Button(
+            text = "Restart?",
+            size_hint = (0.9,0.1),
+            bold = True,
+            font_size = 30,
+            pos_hint={'center_x': 0.5, 'y': 0.18},
+            
+        )
+        
+        self.root.add_widget(self.restart_but)
+        
+        # When the user presses on the restart button, the program calls the return_home() function.
+        self.restart_but.bind(on_press= self.return_home)
+        
+        
+        
+    def return_home(self, root):
+        '''
+        Purpose: Go back to the home screen of the quiz app and ensures that the app will continue to run unless the user closes the window.
+        '''
+        
+        # Calls the main_home() function from the Home() class.
+        self.root.main_home()
+        
+        # Calls the start() function.
+        self.start(root)
+        
+          
     def option_n(self, root):
-        import random
-        # y = ["Sure",0.9,0.1, 0.5, 0.21, random.choice(drive_thru)]
-        # n = ["Absolutely not!", 0.9, 0.1, 0.5, 0.1, random.choice(deliver)]
+        '''
+        Purpose: Displays the result if user picked "Absolutely Not!" and the "Restart" button.
+        '''
         
+        # List of your local places that has delivery.
         deliver = ['Mikado', 'Edo Japan', 'Pizza Hut', 'Dominos', \
             'Swan Pizza' , 'Papa Johns Pizza', 'Pizza 73', 'Grain of Rice',\
                 'Rice Bowl Deluxe']
         
+        # Clears the quiz app except for the logo
+        self.root.reset()
         
-        self.root.clear_widgets()
+        # Displays the result & the restart button to restart the quiz.
         self.add_label(root,f"Get {random.choice(deliver)}!")
-            
-    def option_y(self, root):
-        import random
-        # y = ["Sure",0.9,0.1, 0.5, 0.21, random.choice(drive_thru)]
-        # n = ["Absolutely not!", 0.9, 0.1, 0.5, 0.1, random.choice(deliver)]
+        self.home_button(root)
         
+    
+    def option_y(self, root):
+        '''
+        Purpose: Displays the result if user picked "Sure" and the "Restart" button.
+        '''
+        
+        # # List of your local drive-thru places.
         drive_thru = ['McDonald\'s', 'Popeyes', 'Burger King', 'Dairy Queen','A&W', 'KFC']
         
+        # Clears the quiz app except for the logo
+        self.root.reset()
         
-        self.root.clear_widgets()
+        # Displays the result & the restart button to restart the quiz.
         self.add_label(root,f"Go for {random.choice(drive_thru)}!")
-            
+        self.home_button(root)
         
-        # self.remove_widget(self.y)
-        # self.remove_widget(self.buttonN)
-        #self.remove_widgets(self.new_l)
-        #self.add_label(root,e)
-        
-        
-        
-        
-        # self.buttonY.bind(on_press= print(f"Go for {random.choice(drive_thru)}"))
-        
-        # self.buttonN.bind(on_press= print(f"Go for {random.choice(deliver)}"))
-            
-            
-            
-            
-            
-        # self.buttonN = Button(
-        #     text = "Absolutely Not!",
-        #     size_hint = (0.5, 0.5),
-        #     bold = True,
-        #     font_size = 30
-        # )
-        
-        
-        # self.buttonY.bind(on_press = self.yesoption)
-        # self.buttonN.bind(on_press = self.nooption)
-        # self.window.add_widget(self.buttonY)
-        # self.window.add_widget(self.buttonN)
-    
-    
-    
-        # self.window = GridLayout()
-        # self.window.cols = 1
-        # self.window.size_hint = (0.6, 0.7)
-        # self.window.pos_hint = {"center_x": 0.5, "center_y": 0.5}
-        # self.window.add_widget(Image(source="logo.png"))
-        
-        # self.ready4Quiz = Label(
-        #     text = "Are you ready to decide what to eat?",
-        #     font_size = 45,
-        #     color = "#FFFFFF",
-        #     bold = True
-        # )
-        
-        # self.window.add_widget(self.ready4Quiz)
-        
-        # self.button = Button(
-        #     text = "YES, I'M STARVING!!",
-        #     size_hint = (0.5, 0.5),
-        #     bold = True,
-        #     font_size = 30
-        # )
-        # self.window.add_widget(self.button)
-        # self.button.bind(on_press = self.beginQ)
-        
-        
-        # return self.window
-    ##########################################################################
-    # def beginQ(self, event):
-        
-    #     
-        
-        
-        
-    
-        
-        
-        
-    # def yesoption(self, event):
-        
-    #     import random
-        
-    #     ans = str(random.choice(drive_thru))
-        
-    #     self.window.remove_widget(self.quest)
-    #     self.window.remove_widget(self.buttonN)
-    #     self.window.remove_widget(self.buttonY)
-        
-    #     self.ans = Label(
-    #         text = f"Go for {ans}!",
-    #         font_size = 45,
-    #         color = "#FFFFFF",
-    #         bold = True
-    #     )
-        
-    #     self.window.add_widget(self.ans)
-        
-        
-        
-        
-    
-    # def nooption(self, event):
-    #     import random
-        
-    #     ans = str(random.choice(deliver))
-        
-    #     self.window.remove_widget(self.quest)
-    #     self.window.remove_widget(self.buttonN)
-    #     self.window.remove_widget(self.buttonY)
-        
-    #     self.ans = Label(
-    #         text = f"Get {ans}!",
-    #         font_size = 45,
-    #         color = "#FFFFFF",
-    #         bold = True
-    #     )
-        
-    #     self.window.add_widget(self.ans)
 
 if __name__ == "__main__":
     QuizApp().run()
