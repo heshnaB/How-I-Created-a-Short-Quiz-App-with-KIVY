@@ -1,5 +1,3 @@
-#In Progress
-
 '''
 Author: Heshna Bhagawan
 Project: Building a quiz app that helps you decide what to eat. The code is designed to go in an infinite loop and won't close until the user closes the window.
