@@ -18,10 +18,10 @@ from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.image import Image
 from kivy.uix.button import Button
-from kivy.uix.textinput import TextInput
 from kivy.graphics import Color, Rectangle
 from kivy.uix.floatlayout import FloatLayout
 import random
+
 
 # Step 3: Create a home screen for the app.
 class Home(FloatLayout):
@@ -57,31 +57,41 @@ class Home(FloatLayout):
         self.clear_widgets()
         
         # Creates the first question.
-        self.label = Label(
-                text="Are you ready to decide what to eat?",
-                font_size = 45,
-                color = "#FFFFFF",
-                bold = True,
-                pos_hint={'x': 0.000000001, 'center_y': 0.4}
-            )
+        self.add_label("Are you ready to decide what to eat?")
         
-        # Creates the button for the answer to the first question.
-        self.button = Button(
-            text = "Yes, I'm starving!",
-            size_hint = (0.9, 0.185),
-            bold = True,
-            font_size = 30,
-            pos_hint={'center_x': 0.5, 'y': 0.1})
+        self.button = self.add_button("Yes, I'm starving!", (0.9, 0.185), 0.1)
+        
         
         # Display the logo
         self.logo()
         
         # Display the question and the button.
-        self.add_widget(self.label)
         self.add_widget(self.button)
         
+    
+    def add_label(self, string):
+        self.add_widget(Label(
+            text = string,
+            font_size = 45,
+            color = "#FFFFFF",
+            bold = True,
+            pos_hint={'x': 0.000000001, 'center_y': 0.4}
+        ))
         
-            
+    def add_button(self, string, size, y):
+        '''
+        Purpose: Create and add the yes and no buttons.
+        '''
+        
+        self.b = Button(
+            text = string,
+            size_hint = size,
+            bold = True,
+            font_size = 30,
+            pos_hint={'center_x': 0.5, 'y': y},
+        )
+        
+        return self.b
 
     def reset(self):
         '''
@@ -103,25 +113,47 @@ class QuizApp(App):
         # Creates a variable for the Home() class.
         self.root = root = Home()
         
-        # Recognizes the size and position changes. See the purpose of the function "_update_rect()" below.
-        root.bind(size=self._update_rect, pos=self._update_rect)
-        
-        # Adds a background image/color/video to the layout of the quiz app. 
-        with root.canvas.before:
-            
-            # See color link in references for more colors.
-            Color(0, 0, 0, 0)  
-            self.rect = Rectangle(size=root.size, pos=root.pos)
-        
         # Calls the start() function.
         self.start(root)
     
-    def _update_rect(self, instance, value):
+    def display_result(self, root, result):
+        
+        self.root.reset()
+        
+        # Displays the result & the restart button to restart the quiz.
+        self.root.add_label(result)
+        self.restart_but = self.root.add_button("Restart", (0.9, 0.1), 0.18)
+        self.root.add_widget(self.restart_but)
+        
+        # When the user presses on the restart button, the program calls the return_home() function.
+        self.restart_but.bind(on_press= self.return_home)
+        
+        
+    def option_n(self, root):
         '''
-        Purpose: To ensure that the rectangle is drawn inside the layout of the quiz app.
+        Purpose: Displays the result if user picked "Absolutely Not!" and the "Restart" button.
         '''
-        self.rect.pos = instance.pos
-        self.rect.size = instance.size   
+        
+        result = f"Get {random.choice(['Mikado', 'Edo Japan', 'Pizza Hut', 'Dominos', 'Swan Pizza' , 'Papa Johns Pizza', 'Pizza 73', 'Grain of Rice', 'Rice Bowl Deluxe'])}!"
+        
+        
+        # Repetitive function
+        
+        self.display_result(root, result)
+        
+        
+    
+    def option_y(self, root):
+        '''
+        Purpose: Displays the result if user picked "Sure" and the "Restart" button.
+        '''
+        
+        # # List of your local drive-thru places.
+        result = f"Go for {random.choice(['McDonalds', 'Popeyes', 'Burger King', 'Dairy Queen','A&W', 'KFC'])}!"
+        self.display_result(root, result)
+        
+        
+    
         
     def start(self, root):
         '''
@@ -129,12 +161,7 @@ class QuizApp(App):
         '''
         
         self.root.button.bind(on_press= self.beginQ)
-        self.h = ''
-        return root
         
-    
-    
-    
     def beginQ(self,root):
         '''
         Purpose: Displays the next page after clicking the button on the home screen.
@@ -144,76 +171,15 @@ class QuizApp(App):
         self.root.reset()
         
         # Adds the label and the buttons.
-        self.add_label(root,"Do you feel like driving?")
-        self.add_buttons(root)
+        self.root.add_label("Do you feel like driving?")
+        self.yes = self.root.add_button("Sure", (0.9, 0.1), 0.21)
         
+        self.no = self.root.add_button("Absolutely not!", (0.9, 0.1), 0.1)
+        self.root.add_widget(self.yes)
         
-        
-        
-    def add_label(self,root, string):
-        '''
-        Purpose: Create and add the label onto the app.
-        '''
-        
-        self.root.add_widget(Label(
-            text = string,
-            font_size = 45,
-            color = "#FFFFFF",
-            bold = True,
-            pos_hint={'x': 0.000000001, 'center_y': 0.4}
-        ))
-        
-        
-        
-    def add_buttons(self, root):
-        '''
-        Purpose: Create and add the yes and no buttons.
-        '''
-        
-        self.y = Button(
-            text = "Sure",
-            size_hint = (0.9,0.1),
-            bold = True,
-            font_size = 30,
-            pos_hint={'center_x': 0.5, 'y': 0.21},
-        )
-        
-        self.buttonN = Button(
-            text = "Absolutely not!",
-            size_hint = (0.9,0.1),
-            bold = True,
-            font_size = 30,
-            pos_hint={'center_x': 0.5, 'y': 0.1},
-            
-        )
-        
-        self.root.add_widget(self.y)
-        self.root.add_widget(self.buttonN)
-        
-        # Binds the yes and no buttons so that they lead the user to their own result.
-        self.y.bind(on_press= self.option_y)
-        self.buttonN.bind(on_press = self.option_n)
-    
-    
-    def home_button(self, root):
-        '''
-        Display: Adds a button that takes the user back to the homepage.
-        '''
-        
-        self.restart_but = Button(
-            text = "Restart?",
-            size_hint = (0.9,0.1),
-            bold = True,
-            font_size = 30,
-            pos_hint={'center_x': 0.5, 'y': 0.18},
-            
-        )
-        
-        self.root.add_widget(self.restart_but)
-        
-        # When the user presses on the restart button, the program calls the return_home() function.
-        self.restart_but.bind(on_press= self.return_home)
-        
+        self.root.add_widget(self.no)
+        self.yes.bind(on_press= self.option_y)
+        self.no.bind(on_press= self.option_n)
         
         
     def return_home(self, root):
@@ -226,40 +192,10 @@ class QuizApp(App):
         
         # Calls the start() function.
         self.start(root)
+        #self.start(root)
         
           
-    def option_n(self, root):
-        '''
-        Purpose: Displays the result if user picked "Absolutely Not!" and the "Restart" button.
-        '''
-        
-        # List of your local places that has delivery.
-        deliver = ['Mikado', 'Edo Japan', 'Pizza Hut', 'Dominos', \
-            'Swan Pizza' , 'Papa Johns Pizza', 'Pizza 73', 'Grain of Rice',\
-                'Rice Bowl Deluxe']
-        
-        # Clears the quiz app except for the logo
-        self.root.reset()
-        
-        # Displays the result & the restart button to restart the quiz.
-        self.add_label(root,f"Get {random.choice(deliver)}!")
-        self.home_button(root)
-        
     
-    def option_y(self, root):
-        '''
-        Purpose: Displays the result if user picked "Sure" and the "Restart" button.
-        '''
-        
-        # # List of your local drive-thru places.
-        drive_thru = ['McDonald\'s', 'Popeyes', 'Burger King', 'Dairy Queen','A&W', 'KFC']
-        
-        # Clears the quiz app except for the logo
-        self.root.reset()
-        
-        # Displays the result & the restart button to restart the quiz.
-        self.add_label(root,f"Go for {random.choice(drive_thru)}!")
-        self.home_button(root)
         
 
 if __name__ == "__main__":
