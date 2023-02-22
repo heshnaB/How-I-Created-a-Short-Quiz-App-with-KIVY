@@ -28,7 +28,7 @@ class Home(FloatLayout):
 
     def __init__(self, **kwargs):
         '''
-        Purpose: Initiates the class
+        Purpose: Initiates the class and calls the function main_home()
         '''
         
         # Sets up the app window
@@ -59,17 +59,21 @@ class Home(FloatLayout):
         # Creates the first question.
         self.add_label("Are you ready to decide what to eat?")
         
+        # Calls the add_button function() and displays the button
         self.button = self.add_button("Yes, I'm starving!", (0.9, 0.185), 0.1)
+        self.add_widget(self.button)
         
-        
-        # Display the logo
+        # Calls the function to create and display the logo
         self.logo()
         
-        # Display the question and the button.
-        self.add_widget(self.button)
+        
         
     
     def add_label(self, string):
+        '''
+        Purpose: Creates and displays the label onto the app.
+        '''
+        
         self.add_widget(Label(
             text = string,
             font_size = 45,
@@ -80,7 +84,7 @@ class Home(FloatLayout):
         
     def add_button(self, string, size, y):
         '''
-        Purpose: Create and add the yes and no buttons.
+        Purpose: Creates a button and returns it.
         '''
         
         self.b = Button(
@@ -98,7 +102,7 @@ class Home(FloatLayout):
         Purpose: To remove all widgets except the logo.
         '''
         
-        # Clears all the widgets and adds the logo.
+        # Clears all the widgets with Kivy method and calls the logo() function.
         self.clear_widgets()
         self.logo()    
         
@@ -117,66 +121,70 @@ class QuizApp(App):
         self.start(root)
     
     def display_result(self, root, result):
+        '''
+        Purpose: Display the result of the quiz
+        '''
         
+        # First: Resets the screen if any widget is on there
         self.root.reset()
         
-        # Displays the result & the restart button to restart the quiz.
+        # Second: Calls the add_label() function to add the result.
         self.root.add_label(result)
+        
+        # Third: Create, display, and binds "Restart" button
+        # 1. Calls the add_button() function to add the restart button.
         self.restart_but = self.root.add_button("Restart", (0.9, 0.1), 0.18)
+        
+        # 2. Displays the restart button
         self.root.add_widget(self.restart_but)
         
-        # When the user presses on the restart button, the program calls the return_home() function.
+        # 3. Determines what happens when the user presses on the restart button
         self.restart_but.bind(on_press= self.return_home)
         
         
     def option_n(self, root):
         '''
-        Purpose: Displays the result if user picked "Absolutely Not!" and the "Restart" button.
+        Purpose: Determines the result for result if user picked "Absolutely Not!"
         '''
         
-        result = f"Get {random.choice(['Mikado', 'Edo Japan', 'Pizza Hut', 'Dominos', 'Swan Pizza' , 'Papa Johns Pizza', 'Pizza 73', 'Grain of Rice', 'Rice Bowl Deluxe'])}!"
-        
-        
-        # Repetitive function
-        
-        self.display_result(root, result)
+        # Returns the result after getting a random choice
+        self.display_result(root, f"Get {random.choice(['Mikado', 'Edo Japan', 'Pizza Hut', 'Dominos', 'Swan Pizza' , 'Papa Johns Pizza', 'Pizza 73', 'Grain of Rice', 'Rice Bowl Deluxe'])}!")
         
         
     
     def option_y(self, root):
         '''
-        Purpose: Displays the result if user picked "Sure" and the "Restart" button.
+        Purpose: Determines the result for result if user picked "Sure"
         '''
-        
-        # # List of your local drive-thru places.
-        result = f"Go for {random.choice(['McDonalds', 'Popeyes', 'Burger King', 'Dairy Queen','A&W', 'KFC'])}!"
-        self.display_result(root, result)
+                
+        # Returns the result after getting a random choice
+        self.display_result(root, f"Go for {random.choice(['McDonalds', 'Popeyes', 'Burger King', 'Dairy Queen','A&W', 'KFC'])}!")
         
         
     
         
     def start(self, root):
         '''
-        Purpose: Contains the first button's action and returns the app screen.
+        Purpose: Determines what the home screen button does. It enables us to make the quiz a loop (see return_home() function)
         '''
         
         self.root.button.bind(on_press= self.beginQ)
         
     def beginQ(self,root):
         '''
-        Purpose: Displays the next page after clicking the button on the home screen.
+        Purpose: Displays the only question page.
         '''
         
         # Clears page except for the logo.
         self.root.reset()
         
-        # Adds the label and the buttons.
+        # Adds the label and the buttons by calling functions
         self.root.add_label("Do you feel like driving?")
         self.yes = self.root.add_button("Sure", (0.9, 0.1), 0.21)
-        
         self.no = self.root.add_button("Absolutely not!", (0.9, 0.1), 0.1)
-        self.root.add_widget(self.yes)
         
+        # Uses kivy methods to display the widgets and binds the buttons
+        self.root.add_widget(self.yes)
         self.root.add_widget(self.no)
         self.yes.bind(on_press= self.option_y)
         self.no.bind(on_press= self.option_n)
@@ -184,7 +192,7 @@ class QuizApp(App):
         
     def return_home(self, root):
         '''
-        Purpose: Go back to the home screen of the quiz app and ensures that the app will continue to run unless the user closes the window.
+        Purpose: Go back to the home screen of the quiz app and ensures that the app will run infinitely.
         '''
         
         # Calls the main_home() function from the Home() class.
@@ -192,12 +200,11 @@ class QuizApp(App):
         
         # Calls the start() function.
         self.start(root)
-        #self.start(root)
         
           
     
         
-
+# Testing the program :)
 if __name__ == "__main__":
     QuizApp().run()
 
