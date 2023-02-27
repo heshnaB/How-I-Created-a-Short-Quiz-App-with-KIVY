@@ -106,8 +106,8 @@ class Home(FloatLayout):
         self.clear_widgets()
         self.logo()    
         
-# Step 4: Creates the rest of the quiz layouts.
-class QuizApp(App):
+# Step 4: Creates the rest of the quiz layouts. Any word before the App for the name of the class will become the title of tab. So in this example, the title is "Decide_What_To_Eat"
+class Decide_What_To_EatApp(App):
     
     def build(self):
         '''
@@ -206,7 +206,7 @@ class QuizApp(App):
         
 # Testing the program :)
 if __name__ == "__main__":
-    QuizApp().run()
+    Decide_What_To_EatApp().run()
 
 
 
